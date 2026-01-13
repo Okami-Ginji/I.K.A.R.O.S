@@ -102,7 +102,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
         top: false,
         child: Row(
           children: [
-            // Voice button
+            // 1️⃣ Left icon (mic)
             IconButton(
               onPressed: _startVoiceMessage,
               icon: const Icon(Icons.mic_rounded),
@@ -113,18 +113,13 @@ class _ChatInputBarState extends State<ChatInputBar> {
             ),
             const SizedBox(width: 8),
 
-            // Text input field
+            // 2️⃣ TextField (Expanded để chiếm hết space còn lại)
             Expanded(
               child: TextField(
                 controller: _textController,
                 focusNode: _focusNode,
                 decoration: InputDecoration(
                   hintText: 'Type a message...',
-                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.6,
-                    ),
-                  ),
                   filled: true,
                   fillColor: theme.colorScheme.surfaceContainerHighest,
                   border: OutlineInputBorder(
@@ -139,15 +134,16 @@ class _ChatInputBarState extends State<ChatInputBar> {
                 style: theme.textTheme.bodyLarge,
                 maxLines: 4,
                 minLines: 1,
-                textCapitalization: TextCapitalization.sentences,
                 onSubmitted: (_) => _sendMessage(),
               ),
             ),
             const SizedBox(width: 8),
 
-            // Affection/Emoji button or Send button
+            // 3️⃣ Right icon (Send hoặc Favorite)
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
               child: _hasText
                   ? IconButton(
                       key: const ValueKey('send'),
