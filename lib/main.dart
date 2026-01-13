@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Ikaros', // fallback value
         debugShowCheckedModeBanner: false,
-        theme: lightTheme,
+        theme: darkTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.system,
         routerConfig: AppRouter.router,

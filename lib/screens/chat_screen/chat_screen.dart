@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ikaros/screens/chat_screen/widget/avatar_view.dart';
 import 'package:ikaros/screens/chat_screen/widget/chat_input_bar.dart';
-import 'package:ikaros/screens/chat_screen/widget/chat_list_view.dart';
 import 'package:ikaros/screens/chat_screen/widget/chat_provider.dart';
+import 'package:ikaros/screens/chat_screen/widget/chat_section.dart';
 import 'package:provider/provider.dart';
 
 /// Main chat screen with three sections: Avatar, Chat, and Input
@@ -16,9 +16,10 @@ class ChatScreen extends StatelessWidget {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const Text('💕'),
             const SizedBox(width: 8),
             Text(
-              'I.K.A.R.O.S',
+              'My Girlfriend',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -34,24 +35,28 @@ class ChatScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Avatar Area (~45% of screen)
-          Expanded(
-            flex: 45,
-            child: Consumer<ChatProvider>(
-              builder: (context, chatProvider, child) {
-                return AvatarView(state: chatProvider.avatarState);
-              },
-            ),
-          ),
+      body: Consumer<ChatProvider>(
+        builder: (context, chatProvider, _) {
+          final isExpanded = chatProvider.isChatExpanded;
+          return Column(
+            children: [
+              // Avatar Area: grows when chat is collapsed
+              Expanded(
+                flex: isExpanded ? 45 : 85,
+                child: AvatarView(state: chatProvider.avatarState),
+              ),
 
-          // Chat Area (scrollable)
-          const Expanded(flex: 55, child: ChatListView()),
+              // Chat Area: expanded section or collapsed bar
+              if (isExpanded)
+                const Expanded(flex: 55, child: ChatSection())
+              else
+                const ChatCollapsedBar(),
 
-          // Input Area (fixed at bottom)
-          const ChatInputBar(),
-        ],
+              // Input Area (fixed at bottom)
+              const ChatInputBar(),
+            ],
+          );
+        },
       ),
     );
   }

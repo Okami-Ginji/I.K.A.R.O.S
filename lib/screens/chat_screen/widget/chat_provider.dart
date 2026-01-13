@@ -11,6 +11,7 @@ class ChatProvider with ChangeNotifier {
   AvatarState _avatarState = AvatarState.idle;
   bool _isTyping = false;
   bool _isGirlfriendTyping = false;
+  bool _isChatExpanded = true;
   Timer? _inactivityTimer;
   Timer? _typingResetTimer;
 
@@ -18,6 +19,7 @@ class ChatProvider with ChangeNotifier {
   AvatarState get avatarState => _avatarState;
   bool get isTyping => _isTyping;
   bool get isGirlfriendTyping => _isGirlfriendTyping;
+  bool get isChatExpanded => _isChatExpanded;
 
   // Mock responses for the girlfriend
   final List<String> _mockResponses = [
@@ -111,8 +113,7 @@ class ChatProvider with ChangeNotifier {
 
     if (typing) {
       // Set avatar to idle when user is typing
-      if (_avatarState != AvatarState.thinking &&
-          _avatarState != AvatarState.talking) {
+      if (_avatarState != AvatarState.thinking && _avatarState != AvatarState.talking) {
         _setAvatarState(AvatarState.idle);
       }
 
@@ -123,6 +124,13 @@ class ChatProvider with ChangeNotifier {
       });
     }
 
+    notifyListeners();
+  }
+
+  /// Toggle chat panel expanded/collapsed state
+  void toggleChatExpanded() {
+    _isChatExpanded = !_isChatExpanded;
+    debugPrint('Chat panel is now: ${_isChatExpanded ? 'expanded' : 'collapsed'}');
     notifyListeners();
   }
 
@@ -144,8 +152,7 @@ class ChatProvider with ChangeNotifier {
   void _startInactivityTimer() {
     _cancelInactivityTimer();
     _inactivityTimer = Timer(UIConstants.inactivityDuration, () {
-      if (_avatarState != AvatarState.thinking &&
-          _avatarState != AvatarState.talking) {
+      if (_avatarState != AvatarState.thinking && _avatarState != AvatarState.talking) {
         _setAvatarState(AvatarState.waiting);
         notifyListeners();
       }
